@@ -1,29 +1,68 @@
+import { FloatingButton } from "@components/button";
+import Layout from "@components/layout";
+import useCoords from "@libs/client/hooks/useCoords";
+import { Post, User } from "@prisma/client";
+import moment from "moment";
 import type { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { FloatingButton } from "../../components/button";
-import Layout from "../../components/layout";
+import useSWR from "swr";
+
+interface IPostWithUserAndCount extends Post {
+  user: User;
+  _count: {
+    answers: number;
+    interests: number;
+  };
+}
+
+interface IPostsReponse {
+  ok: boolean;
+  posts: IPostWithUserAndCount[];
+}
 
 const Community: NextPage = () => {
+  const { latitude, longitude } = useCoords();
+  const { data: postsResponse } = useSWR<IPostsReponse>(
+    latitude && longitude
+      ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
+      : null
+  );
   return (
     <Layout title="피드" isTabBar>
       <div className="px-4">
-        {Array.from({ length: 7 }).map((_, i) => (
+        {postsResponse?.posts?.map((post, i) => (
           <Link
             href="/community/1"
             className="flex flex-col items-start border-b py-8"
-            key={i}
+            key={post.id}
           >
             <span className="flex mx-2 my-2 bg-gray-200 py-0.5 px-2 font-medium text-sm rounded-full shadow-sm">
               동네질문
             </span>
             <span className="font-light text-lg">
-              <span className="text-fuchsia-700 font-medium">Q.</span> What is
-              the best mandu restaurant?
+              <span className="text-fuchsia-700 font-medium">Q.</span>{" "}
+              {post.question}
             </span>
-            <div className="my-4 w-full flex justify-between">
-              <span className="text-sm font-medium text-gray-600">니꼬</span>
+            <div className="my-4 w-full flex justify-between pl-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded-full bg-slate-300">
+                  {post.user.avatar && (
+                    <Image
+                      src={post.user.avatar}
+                      alt={post.user.name}
+                      width={24}
+                      height={24}
+                      className="rounded-full border border-fuchsia-700"
+                    />
+                  )}
+                </div>
+                <span className="text-sm font-medium text-gray-600">
+                  {post.user.name}
+                </span>
+              </div>
               <span className="text-sm font-medium text-gray-600">
-                18시간 전
+                {moment(post.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
               </span>
             </div>
             <div className="flex justify-end w-full space-x-4 items-center">
@@ -43,7 +82,7 @@ const Community: NextPage = () => {
                   ></path>
                 </svg>
                 <span className="text-gray-600  group-hover:text-gray-700 group-active:text-gray-900">
-                  궁금해요 1
+                  궁금해요 {post._count.interests}
                 </span>
               </span>
               <span className="flex items-center space-x-1 group cursor-pointer">
@@ -62,7 +101,7 @@ const Community: NextPage = () => {
                   ></path>
                 </svg>
                 <span className="text-gray-600 group-hover:text-gray-700 group-active:text-gray-900">
-                  답변 1
+                  답변 {post._count.answers}
                 </span>
               </span>
             </div>

@@ -1,6 +1,6 @@
+import { cls } from "@libs/client/functions/classnames";
 import Link from "next/link";
 import React from "react";
-import { cls } from "../libs/functions/classnames";
 
 interface IFloatingButtonProps {
   href: string;

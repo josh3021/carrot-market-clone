@@ -1,8 +1,8 @@
+import { cls } from "@libs/client/functions/classnames";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { cls } from "../libs/functions/classnames";
 
 interface ILayoutProps {
   title?: string;

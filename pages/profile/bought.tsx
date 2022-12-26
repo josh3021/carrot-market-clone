@@ -1,6 +1,6 @@
+import Layout from "@components/layout";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import Layout from "../../components/layout";
 
 const Bought: NextPage = () => {
   const router = useRouter();
@@ -11,7 +11,7 @@ const Bought: NextPage = () => {
           <div
             className="flex px-4 border-b pb-5 cursor-pointer justify-between"
             key={i}
-            onClick={() => router.push(`items/${i}`)}
+            onClick={() => router.push(`products/${i}`)}
           >
             <div className="flex space-x-4 items-center">
               <div className="w-20 h-20 bg-gray-400 rounded-lg" />

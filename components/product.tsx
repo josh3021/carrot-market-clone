@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-interface IItemProps {
+interface IProductProps {
   id: number;
   title: string;
   category: string;
@@ -10,7 +10,7 @@ interface IItemProps {
   // avatar: string -> link;
 }
 
-export const Item: React.FC<IItemProps> = ({
+export const Product: React.FC<IProductProps> = ({
   id,
   title,
   category,
@@ -19,7 +19,7 @@ export const Item: React.FC<IItemProps> = ({
   comments,
 }) => {
   return (
-    <Link className="item-container" href={`items/${id}`}>
+    <Link className="item-container" href={`products/${id}`}>
       <div className="flex space-x-4 items-center">
         <div className="item-picture" />
         <div className="item-header">
